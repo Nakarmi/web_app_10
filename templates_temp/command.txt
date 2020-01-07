@@ -22,7 +22,8 @@ Start django proect:
 django-admin startproject news_portal . 
 ("." is used for current directory)
 
-
+To create superuser: 
+python manasge.py createsuperuser
 
 GIT Commands
 
