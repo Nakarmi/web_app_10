@@ -4,17 +4,26 @@ from django.contrib.auth.models import User
 # Create your models here.
 #DJANGO-ORM (Object Relational Mapping)
 
+class Category(models.Model):
+    title = models.CharField(max_length=30)
+
+    # class Meta:
+    #     verbase_name_plural = "Categories"
+
+    def __str__(self):
+        return self.title
+
 class News(models.Model):
-    CATEGORIES = (("0", "Politics"), 
-                  ("1", "Sports"), 
-                  ("2", "Business"), 
-                  ("3", "International"), 
-                  ("4", "Entertainment"))
+
     title = models.CharField(max_length=255)
     content = models.TextField()
     count = models.IntegerField(default=0)
-    category = models.CharField(max_length=2, choices=CATEGORIES)
+    slug = models.SlugField(max_length=255, null=True)
+    # category = models.CharField(max_length=2, choices=CATEGORIES)
+    category = models.ManyToManyField("Category", null=True)   
+    #category = models.ManyToManyField(Category, related_name="news_categories")
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=False)
     cover_image = models.ImageField(upload_to="news", null=True)
+
