@@ -24,6 +24,6 @@ class News(models.Model):
     #category = models.ManyToManyField(Category, related_name="news_categories")
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=False)
+    updated_at = models.DateTimeField(auto_now=True)
     cover_image = models.ImageField(upload_to="news", null=True)
 
