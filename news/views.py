@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+from django.utils.text import slugify
 from django.views.generic import TemplateView, CreateView, DeleteView, DetailView, UpdateView, ListView
 from news.models import Category, News
+from news.forms import NewsCreateForm
 
 # Create your views here.
 class CategoryNewsView(View):
@@ -21,7 +25,7 @@ class NewsTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = Category.objects.all()
-        print(categories)
+        # print(categories)
         category_news_list = {}
         for category in categories:
             # context[category.title] = News.objects.filter(category=category)
@@ -29,8 +33,39 @@ class NewsTemplateView(TemplateView):
         context["news_list"] = News.objects.all().order_by("-created_at")[:4]
         context["trending_news"] = News.objects.order_by("-count")
         context["category_news_list"] = category_news_list
-        print(context)
+        # print(context)
         return context
+
+class NewsCreateView(LoginRequiredMixin, CreateView):
+    model = News
+    template_name = "news/create.html"
+    login_url = "/accounts/login/"
+    success_url = "/"
+    form_class = NewsCreateForm
+
+    def form_valid(self, form):
+        news = form.save(commit=False)
+        title = form.cleaned_data["title"]
+        slug = slugify(title)
+        news.slug = slug
+        news.author = self.request.user
+        news.save()
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+
+class NewsUpdateView(LoginRequiredMixin, UpdateView):
+    model = News
+    template_name = "news/update.html"
+
+
+class NewsDeleteView(LoginRequiredMixin, DeleteView):
+    model = News
+    template_name = "news/delete.html"
+
 
 class NewsDetail(DetailView):
     model = News
