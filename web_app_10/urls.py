@@ -18,6 +18,15 @@ from django.urls import path, include
 from news import views
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from django.conf.urls import url
+from rest_framework_swagger.views import get_swagger_view
+from news import views
+
+schema_view = get_swagger_view(title="News Portal API")
 
 # urlpatterns = [
 #     path('admin/', admin.site.urls),
@@ -29,10 +38,18 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # jwt
+    path("apis/tokens/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("apis/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     #path('', views.home, name='home'),
     path("", views.NewsTemplateView.as_view(), name="home"),
     path('news/', include('news.urls')),
     path('accounts/', include('accounts.urls')),
+    # urls for apis
+    path("docs/", schema_view),
+    path("api-auth/", include("rest_framework.urls")),
+    path("apis/accounts/", include("accounts.apis.api_urls")),
+    path("apis/news/", include("news.apis.api_urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

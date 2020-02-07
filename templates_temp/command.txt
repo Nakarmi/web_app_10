@@ -25,8 +25,10 @@ django-admin startproject news_portal .
 To create superuser: 
 python manage.py createsuperuser
 
-GIT Commands
+# To serve all static file during deployment
+python manage.py collectstatic
 
+GIT Commands
 1. git status # to see changes
 2. git diff # to compare old and new codes
 3. git add . # to track newly created and modifided file and folders. "." means all
@@ -36,3 +38,14 @@ GIT Commands
 7. git branch # list all branches
 8. git checkout branch_name # checkout to branch_name
 9. git checkout -b branch_name # create new branch named branch_name and checkout to branch_name
+10. get pull origin master #only after push rrequest is performed 
+
+DOCKER COMMANDS:
+1. docker build -t image_name:image_tag . #it builds image using dockerfile which is in current directory
+e.g: docker build -t news_portal:v0 . 
+
+2. docker build --pull --no-cache -t image_name:image_tag . #pull required images without using cache 
+
+3. docker run -p 80:8000 news_portal:v0 # run container of image news_portal:v0 at 8000 port inside container and expose port 80 to system
+
+4. docker run --env-file .env -p 80:8000 news_portal:v0 #use .env file to export environment variable
