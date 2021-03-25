@@ -56,7 +56,7 @@ python-dotenv==0.14.0
 python-git==2018.2.1
 python-jose==3.2.0
 pytz==2020.1
-PyYAML==5.3.1
+PyYAML==5.4
 regex==2020.7.14
 reportlab==3.5.48
 requests==2.24.0
